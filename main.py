@@ -35,33 +35,11 @@ async def process_account(private_key, semaphore):
         with open(f'{path}/failed.txt', 'a') as f:
             f.write(f"{private_key}\n")
 
-async def wait_until_start(private_key: str):
-    grass = GrassFoundation(private_key)
-    proof = ""
-
-    while True:
-        try:
-            proof = await grass.get_sign_msg()
-
-            if proof:
-                logger.success(f"Successfully started | {proof}")
-                await grass.close()
-                return True
-
-        except Exception as e:
-            logger.warning(f"Waiting for start | {e}")
-        finally:
-            logger.warning(f"Waiting for start | {proof} | {grass.address}")
-
-        await asyncio.sleep(1)
-
 
 async def main():
     keys = [account for account in open(f'{path}/keys.txt').read().splitlines()]
     # proxies = open(f'{path}/proxies.txt').read().splitlines()
     logger.info(f"Keys: {len(keys)}")
-
-    await wait_until_start(keys[0])
 
     semaphore = asyncio.Semaphore(THREADS)
 

@@ -19,7 +19,7 @@ async def process_account(private_key, semaphore):
 
             claim_res = await claimer(private_key=private_key, version=proof['versionNumber'], claim_proof=proof['claimProof'],
                                       allocation=proof["allocation"],
-                                      )
+            )
 
             if claim_res:
                 logger.info("Successfully claimed")

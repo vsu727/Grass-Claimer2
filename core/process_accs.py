@@ -202,8 +202,7 @@ async def claimer(private_key: str, version: int, claim_proof: str, allocation: 
             )
 
             ixs.append(claim_ix)
-            if TIP_AMOUNT < 5:
-                TIP_AMOUNT = 5
+
             dest_ata = get_token_pda(owner=dest_pubkey, mint=GRASS_PUBKEY)
 
             dest_info = await provider.get_account_info(pubkey=dest_ata)

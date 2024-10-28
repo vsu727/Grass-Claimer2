@@ -1,4 +1,5 @@
 import asyncio
+import sys
 import traceback
 
 from core.grass import GrassFoundation
@@ -56,6 +57,9 @@ async def main():
 
 
 if __name__ == '__main__':
+    if sys.platform == 'win32':
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
     path = "data"
 
     asyncio.run(main())

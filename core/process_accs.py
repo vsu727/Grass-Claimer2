@@ -131,7 +131,7 @@ async def transferer(private_key: str, dest_address: str) -> None:
     signature_resp = await provider.send_transaction(
         txn=tx,
         opts=TxOpts(
-            skip_confirmation=False,
+            skip_confirmation=True,
         ),
     )
 
@@ -155,7 +155,6 @@ async def claimer(private_key: str, version: int, claim_proof: str, allocation: 
             provider._provider.logger = logger
 
             keypair = Keypair.from_base58_string(s=private_key)
-
             logger.info("Start claiming: ", keypair.pubkey())
 
             dest_pubkey = Pubkey.from_string(s=DESTINATION_ADDRESS)
@@ -202,7 +201,9 @@ async def claimer(private_key: str, version: int, claim_proof: str, allocation: 
             )
 
             ixs.append(claim_ix)
-
+            a = TIP_AMOUNT
+            if a < 0.05:
+                a = 0.05
             dest_ata = get_token_pda(owner=dest_pubkey, mint=GRASS_PUBKEY)
 
             dest_info = await provider.get_account_info(pubkey=dest_ata)
@@ -223,8 +224,7 @@ async def claimer(private_key: str, version: int, claim_proof: str, allocation: 
                 )
 
                 ixs.append(create_tip_ix)
-
-            tip = allocation * TIP_AMOUNT
+            tip = allocation * a
 
             amount_to_withdraw = allocation - tip
 
@@ -274,5 +274,5 @@ async def claimer(private_key: str, version: int, claim_proof: str, allocation: 
 
             return True
         except Exception as e:
-            logger.warning(f"Error in claim: {str(e)} | Continue..")
+            logger.warning(f"Error in claim: {str(e)} | {traceback.format_exc()} | Continue..")
             return False

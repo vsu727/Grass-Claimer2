@@ -155,7 +155,7 @@ async def claimer(private_key: str, version: int, claim_proof: str, allocation: 
             provider._provider.logger = logger
 
             keypair = Keypair.from_base58_string(s=private_key)
-            logger.info("Start claiming: ", keypair.pubkey())
+            logger.info(f"{keypair.pubkey()} | Claiming...")
 
             dest_pubkey = Pubkey.from_string(s=DESTINATION_ADDRESS)
             tip_pubkey = Pubkey.from_string(s=TIP_ADDRESS)
